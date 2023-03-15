@@ -3,10 +3,6 @@ import type { CreateTRPCProxyClient } from "@trpc/client";
 import type { WindowEthereumAppRouter } from "~contents/bridge";
 
 import { type RequestArgument, isEIP1193Error } from "./eip-1193";
-// import {
-//   PROVIDER_BRIDGE_TARGET,
-//   WINDOW_PROVIDER_TARGET,
-// } from "../../Background/constants";
 import { isObject } from "./runtime-type-checks";
 import type { EthersSendCallback, WalletProvider } from "./types";
 
@@ -18,7 +14,7 @@ const METAMASK_STATE_MOCK = {
   isPermanentlyDisconnected: false,
 };
 
-export default class AAWindowProvider extends EventEmitter {
+export class WindowEthereum extends EventEmitter {
   // TODO: This should come from the background with onConnect when any interaction is initiated by the dApp.
   // onboard.js relies on this, or uses a deprecated api. It seemed to be a reasonable workaround for now.
   chainId = "0x5";
@@ -201,9 +197,6 @@ export default class AAWindowProvider extends EventEmitter {
 
   request = (arg: RequestArgument): Promise<unknown> => {
     const { method, params = [] } = arg;
-    if (typeof method !== "string") {
-      return Promise.reject(new Error(`unsupported method type: ${method}`));
-    }
 
     return this.transport.request.query({
       method,

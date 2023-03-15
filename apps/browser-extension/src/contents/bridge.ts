@@ -12,14 +12,12 @@ export const config: PlasmoCSConfig = {
   matches: ["file://*/*", "http://*/*", "https://*/*"],
   run_at: "document_start",
   all_frames: true,
-  // world: "ISOLATED",
 };
 
 // create client to talk to service worker
 const port = chrome.runtime.connect(process.env.PLASMO_PUBLIC_EXTENSION_ID, {
   name: "bg-worker-messaging-port",
 });
-
 export const bgWorkerClient = createTRPCProxyClient<AppRouter>({
   links: [
     loggerLink({

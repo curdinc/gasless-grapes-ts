@@ -1,16 +1,17 @@
 // content.ts
 
-import console from "console";
 import { postMessageLink } from "@elasticbottle/trpc-post-message/link";
 import { createTRPCProxyClient, loggerLink } from "@trpc/client";
 import type { PlasmoCSConfig } from "plasmo";
 
 import type { WindowEthereumAppRouter } from "./bridge";
+import { WindowEthereum } from "./windowEthereum";
 
 // type override
 declare global {
   interface Window {
     test: () => void;
+    ethereum?: { test: () => void };
   }
 }
 
@@ -32,7 +33,6 @@ export const bridgeClient = createTRPCProxyClient<WindowEthereumAppRouter>({
     postMessageLink({
       addEventListener(listener) {
         const customListener = (event: MessageEvent) => {
-          console.log("event", event);
           if (event.origin !== window.location.origin) {
             return;
           }
@@ -50,19 +50,13 @@ export const bridgeClient = createTRPCProxyClient<WindowEthereumAppRouter>({
     }),
   ],
 });
+
 // inject
-console.log("testing");
-bridgeClient.request
-  .query({
-    method: "",
-    params: [1, 2, 3],
-  })
-  .then((result) => {
-    console.log("result", result);
-  })
-  .catch((e) => {
-    console.error(e);
-  });
-window.test = () => {
-  console.log("hello world");
-};
+console.log("ran");
+const windowProvider = new WindowEthereum(bridgeClient);
+
+Object.defineProperty(window, "ethereum", {
+  get() {
+    return windowProvider;
+  },
+});
