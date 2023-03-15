@@ -1,5 +1,5 @@
 {
-  "name": "@gaslessgrapes/browser-extension",
+  "name": "@gg/browser-extension",
   "displayName": "Gasless Grapes Crypto Wallet",
   "version": "0.0.1",
   "description": "Gasless Grapes is the power user's crypto wallet of choice for all of web3",
@@ -11,19 +11,24 @@
     "package": "plasmo package"
   },
   "dependencies": {
+    "@elasticbottle/trpc-post-message": "^0.0.4",
+    "@trpc/client": "^10.14.0",
+    "@trpc/server": "^10.14.0",
     "plasmo": "0.66.0",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "superjson": "1.9.1",
+    "trpc-chrome": "^1.0.0"
   },
   "devDependencies": {
+    "@plasmohq/prettier-plugin-sort-imports": "3.6.3",
     "@types/chrome": "0.0.210",
     "@types/node": "18.11.18",
     "@types/react": "18.0.27",
     "@types/react-dom": "18.0.10",
+    "eslint-config-gaslessgrapes": "*",
     "prettier": "2.8.3",
-    "typescript": "4.9.4",
-    "@plasmohq/prettier-plugin-sort-imports": "3.6.3",
-    "eslint-config-gaslessgrapes": "*"
+    "typescript": "4.9.4"
   },
   "manifest": {
     "host_permissions": [
