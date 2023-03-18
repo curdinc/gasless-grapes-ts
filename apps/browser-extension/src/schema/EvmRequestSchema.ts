@@ -5,6 +5,7 @@ const EthHashSchema = z.string().regex(/^0x[0-9a-f]{64}$/);
 const BytesSchema = z.string().regex(/^0x[0-9a-f]*$/);
 const BloomFilterSchema = z.string().regex(/^0x[0-9a-f]{512}$/);
 const HexNumberSchema = z.string().regex(/^0x([1-9a-f]+[0-9a-f]*|0)$/);
+
 const BlockNonceSchema = z.string().regex(/^0x[0-9a-f]{16}$/);
 const BlockTagSchema = z.enum([
   "earliest",
@@ -15,26 +16,31 @@ const BlockTagSchema = z.enum([
 ]);
 const BlockNumberSchema = z.union([HexNumberSchema, BlockTagSchema]);
 
-const BlockTransactionSchema = z.object({
-  accessList: z.any().array(),
-  blockHash: EthHashSchema,
-  blockNumber: HexNumberSchema,
-  chainId: HexNumberSchema,
+const TransactionSchema = z.object({
+  type: z.string().regex(/^0x([0-9,a-f,A-F]?){1,2}$/),
+  nonce: HexNumberSchema.optional(),
+  to: EthAddressSchema.optional(),
   from: EthAddressSchema,
+  value: HexNumberSchema.optional(),
+  input: BytesSchema,
   gas: HexNumberSchema,
   gasPrice: HexNumberSchema,
-  hash: EthHashSchema,
-  input: BytesSchema,
   maxFeePerGas: HexNumberSchema,
   maxPriorityFeePerGas: HexNumberSchema,
-  nonce: HexNumberSchema,
+  accessList: z.any().array(),
+  chainId: HexNumberSchema,
+});
+
+const BlockTransactionSchema = z.object({
+  ...TransactionSchema.shape,
+  blockHash: EthHashSchema,
+  blockNumber: HexNumberSchema,
+  hash: EthHashSchema,
   r: HexNumberSchema,
   s: HexNumberSchema,
   to: EthAddressSchema,
   transactionIndex: z.string(),
-  type: z.string().regex(/^0x([0-9,a-f,A-F]?){1,2}$/),
   v: HexNumberSchema,
-  value: HexNumberSchema,
 });
 
 const RequestedPermissionsSchema = z.record(z.string(), z.object({}));
@@ -88,7 +94,7 @@ const BlockInformationSchema = z.object({
   transactions: z.union([BlockTransactionSchema, EthHashSchema]).array(),
 });
 
-export const EvmRequestSchema = z.discriminatedUnion("method", [
+export const EvmKnownRequestInputSchema = z.discriminatedUnion("method", [
   z.object({
     method: z.literal("eth_requestAccounts"),
     param: z.undefined(),
@@ -110,7 +116,7 @@ export const EvmRequestSchema = z.discriminatedUnion("method", [
   }),
   // Deprecated
   z.object({
-    method: z.literal(" eth_getEncryptionPublicKey "),
+    method: z.literal("eth_getEncryptionPublicKey "),
     // [0] The public encryption key of the specified Ethereum account.
     params: z.string().array().length(1),
   }),
@@ -184,17 +190,60 @@ export const EvmRequestSchema = z.discriminatedUnion("method", [
     method: z.literal("eth_blockNumber"),
     params: z.undefined(),
   }),
+  // TODO: Figure out the proper typings
+  // z.object({
+  //   method: z.literal("eth_call"),
+  //   params: z
+  //     .union([TransactionSchema, z.union([BlockNumberSchema, EthHashSchema])])
+  //     .array()
+  //     .length(2)
+  //     .refine((arg) => {
+  //       const isTransaction = TransactionSchema.safeParse(arg[0]);
+  //       const isBlockInfo = z
+  //         .union([BlockNumberSchema, EthHashSchema])
+  //         .safeParse(arg[1]);
+  //       return isTransaction.success && isBlockInfo.success;
+  //     }),
+  // }),
+  // z.object({
+  //   method: z.literal("eth_estimateGas"),
+  //   params: z
+  //     .union([TransactionSchema, BlockNumberSchema])
+  //     .array()
+  //     .length(2)
+  //     .refine((arg) => {
+  //       const isTransaction = TransactionSchema.safeParse(arg[0]);
+  //       const isBlockNumber = BlockNumberSchema.safeParse(arg[1]);
+  //       return isTransaction.success && isBlockNumber.success;
+  //     }),
+  // }),
+  // z.object({
+  //   method: z.literal("eth_createAccessList"),
+  //   params: z
+  //     .union([TransactionSchema, BlockNumberSchema])
+  //     .array()
+  //     .length(2)
+  //     .refine((arg) => {
+  //       const isTransaction = TransactionSchema.safeParse(arg[0]);
+  //       const isBlockNumber = BlockNumberSchema.safeParse(arg[1]);
+  //       return isTransaction.success && isBlockNumber.success;
+  //     }),
+  // }),
+]);
+export const EvmRequestInputSchema = z.union([
+  EvmKnownRequestInputSchema,
   z.object({
-    method: z.literal("eth_call"),
-    // params: z.sarray().length(2),
+    method: z.string(),
+    params: z.unknown().array().optional(),
   }),
 ]);
+export type EvmRequestType = z.infer<typeof EvmRequestInputSchema>;
 
 const Web3WalletPermissionSchema = z.object({
   parentCapability: z.string(),
   date: z.number().optional(),
 });
-export const EvmOUtputSchema = z.discriminatedUnion("method", [
+export const KnownEvmRequestOutputSchema = z.discriminatedUnion("method", [
   z.object({
     method: z.literal("eth_requestAccounts"),
     result: z.string().array().length(1),
@@ -288,5 +337,21 @@ export const EvmOUtputSchema = z.discriminatedUnion("method", [
     method: z.literal("eth_blockNumber"),
     result: HexNumberSchema,
   }),
+  // z.object({
+  //   method: z.literal("eth_call"),
+  //   result: BytesSchema,
+  // }),
+  // z.object({
+  //   method: z.literal("eth_estimateGas"),
+  //   result: HexNumberSchema,
+  // }),
 ]);
-export type EvmRequestType = z.infer<typeof EvmRequestSchema>;
+export const EvmRequestOutputSchema = z.union([
+  KnownEvmRequestOutputSchema,
+  z.object({
+    method: z.string(),
+    result: z.unknown().array().optional(),
+  }),
+]);
+
+export type EvmRequestOutputType = z.infer<typeof EvmRequestOutputSchema>;

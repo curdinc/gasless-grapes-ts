@@ -1,6 +1,12 @@
 import { initTRPC } from "@trpc/server";
 import { createChromeHandler } from "trpc-chrome/adapter";
-import { z } from "zod";
+import {
+  EvmRequestInputSchema,
+  type EvmRequestOutputType,
+} from "~schema/EvmRequestSchema";
+
+import { runChromeListeners } from "./chromeListeners";
+import { evmRpcEvents } from "./events";
 
 const t = initTRPC.create({
   isServer: false,
@@ -9,12 +15,35 @@ const t = initTRPC.create({
 const publicProcedure = t.procedure;
 
 const appRouter = t.router({
-  test: publicProcedure
-    .input(z.object({ name: z.string() }))
-    .query(({ input }) => {
-      console.log("background called");
-      return `hello ${input.name}`;
-    }),
+  request: publicProcedure.input(EvmRequestInputSchema).query(({ input }) => {
+    return new Promise<EvmRequestOutputType>((res, rej) => {
+      const onEvmRequestComplete = (
+        evmRequestResponse: EvmRequestOutputType,
+      ) => {
+        console.log("official");
+        evmRpcEvents.off("evmRequestComplete", onEvmRequestComplete);
+        res(evmRequestResponse);
+      };
+      const altFn = () => {
+        console.log("test");
+        evmRpcEvents.off("evmRequestComplete", altFn);
+      };
+
+      evmRpcEvents.on("evmRequestComplete", onEvmRequestComplete);
+      evmRpcEvents.on("evmRequestComplete", altFn);
+      evmRpcEvents.emit("evmRequestComplete", {
+        method: "eth_chainId",
+        result: "",
+      });
+      switch (input.method) {
+        case "eth_getEncryptionPublicKey ": {
+          break;
+        }
+        default: {
+        }
+      }
+    });
+  }),
 });
 export type AppRouter = typeof appRouter;
 
@@ -29,3 +58,5 @@ createChromeHandler({
         }
       : undefined,
 });
+
+runChromeListeners();

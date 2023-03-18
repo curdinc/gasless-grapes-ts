@@ -4,8 +4,8 @@ import { createTRPCProxyClient, loggerLink } from "@trpc/client";
 import { initTRPC } from "@trpc/server";
 import type { PlasmoCSConfig } from "plasmo";
 import { chromeLink } from "trpc-chrome/link";
-import { z } from "zod";
 import type { AppRouter } from "~background";
+import { EvmRequestInputSchema } from "~schema/EvmRequestSchema";
 
 // config
 export const config: PlasmoCSConfig = {
@@ -38,16 +38,18 @@ const publicProcedure = t.procedure;
 
 const appRouter = t.router({
   request: publicProcedure
-    .input(z.object({ method: z.string(), params: z.any().array() }))
+    .input(EvmRequestInputSchema)
     .query(async ({ input }) => {
       console.log("input", input);
-      const test = await bgWorkerClient.test.query({ name: "test" });
-      console.log("test", test);
-      return test;
+      // const test = await bgWorkerClient.request.subscribe({ name: "test" });
+      // console.log("test", test);
+      // return test;
+      return "done";
     }),
 });
 export type WindowEthereumAppRouter = typeof appRouter;
 
+// Create handler to listen to the MAIN script
 createPostMessageHandler({
   router: appRouter,
   onError:
