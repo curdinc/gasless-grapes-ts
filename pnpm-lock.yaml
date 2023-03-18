@@ -35,6 +35,7 @@ importers:
       '@emotion/styled': ^11.10.6
       '@gg/utils': '*'
       '@plasmohq/prettier-plugin-sort-imports': 3.6.3
+      '@plasmohq/storage': ^1.3.1
       '@trpc/client': ^10.14.0
       '@trpc/server': ^10.14.0
       '@types/chrome': 0.0.210
@@ -60,6 +61,7 @@ importers:
       '@emotion/react': 11.10.6_3stiutgnnbnfnf3uowm5cip22i
       '@emotion/styled': 11.10.6_zjrrpqmb4rf5frur5mrydkybnq
       '@gg/utils': link:../../packages/utils
+      '@plasmohq/storage': 1.3.1_react@18.2.0
       '@trpc/client': 10.14.0_@trpc+server@10.14.0
       '@trpc/server': 10.14.0
       framer-motion: 10.6.0_biqbaboplfbrettd7655fr4n2y
@@ -6035,6 +6037,18 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /@plasmohq/storage/1.3.1_react@18.2.0:
+    resolution: {integrity: sha512-K+EsksYrpBBnI3ZgWhNKJoKfjCzyEOrhZOC6oxzU9p7iKhvpQOIELY8JlFmc+sUnof+Ta6XwMvLJnxhrlcXt8w==}
+    peerDependencies:
+      react: ^16.8.6 || ^17 || ^18
+    peerDependenciesMeta:
+      react:
+        optional: true
+    dependencies:
+      pify: 6.1.0
+      react: 18.2.0
+    dev: false
 
   /@pnpm/config.env-replace/1.0.0:
     resolution: {integrity: sha512-ZVPVDi1E8oeXlYqkGRtX0CkzLTwE2zt62bjWaWKaAvI8NZqHzlMvGeSNDpW+JB3+aKanYb4UETJOF1/CxGPemA==}
@@ -13118,6 +13132,11 @@ packages:
   /pify/4.0.1:
     resolution: {integrity: sha512-uB80kBFb/tfd68bVleG9T5GGsGPjJrLAUpR5PZIrhBnIaRTQRjqdJSsIKkOP6OAIFbj7GOrcudc5pNjZ+geV2g==}
     engines: {node: '>=6'}
+    dev: false
+
+  /pify/6.1.0:
+    resolution: {integrity: sha512-KocF8ve28eFjjuBKKGvzOBGzG8ew2OqOOSxTTZhirkzH7h3BI1vyzqlR0qbfcDBve1Yzo3FVlWUAtCRrbVN8Fw==}
+    engines: {node: '>=14.16'}
     dev: false
 
   /pirates/4.0.5:
