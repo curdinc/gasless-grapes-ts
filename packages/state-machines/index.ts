@@ -1,1 +1,1 @@
-export * from "./src/onboarding";
+export * from "./src/onboardingMachine";

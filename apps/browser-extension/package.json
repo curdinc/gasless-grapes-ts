@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@chakra-ui/react": "^2.5.2",
+    "@chakra-ui/styled-system": "^2.6.2",
     "@chakra-ui/theme-tools": "^2.0.16",
     "@elasticbottle/trpc-post-message": "^0.0.4",
     "@emotion/react": "^11.10.6",
