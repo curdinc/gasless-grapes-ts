@@ -27,6 +27,7 @@ contract WalletFactory {
     }
 
     function createWallet(bytes32 _salt, address _EOA) external returns(address) {
+        //TODO: Test result of repeated call
         BeaconProxy walletProxy = new BeaconProxy{salt: _salt}(address(beacon), abi.encodeCall(Wallet.initialize, _EOA));
         // Wallet was successfully created
         walletsDeployed[address(walletProxy)] = true;

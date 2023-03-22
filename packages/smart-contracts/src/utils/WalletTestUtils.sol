@@ -31,7 +31,7 @@ contract WalletTestUtils {
     }
 
     function encodeTransaction(Transaction calldata transaction, uint256 nonce) public view returns(bytes32) {
-        bytes32 txn_hash = keccak256(abi.encode(nonce, transaction.gasLimit, transaction.target, transaction.revertOnError, transaction.value, transaction.data));
+        bytes32 txn_hash = keccak256(abi.encode(transaction.nonce, transaction.gasLimit, transaction.target, transaction.revertOnError, transaction.value, transaction.data));
         return keccak256(abi.encodePacked("\x19\x01", DOMAIN_SEPARATOR(), txn_hash));
     }
 

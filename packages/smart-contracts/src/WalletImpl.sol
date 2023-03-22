@@ -3,18 +3,12 @@ pragma solidity ^0.8.7;
 import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
-
-//FIXME:
-// Transaction structure
-struct Transaction {
-    uint256 gasLimit;    // Maximum gas to be forwarded
-    address target;      // Address of the contract to call
-    bool revertOnError;  // Revert entire transaction if fail
-    uint256 value;       // Amount of ETH to pass with the call
-    bytes data;          // calldata to pass
-}
+import "@account-abstraction/samples/SimpleAccount.sol";
+import "ExcessivelySafeCall/ExcessivelySafeCall.sol";
+import "./utils/Transaction.sol";
 
 contract Wallet is AccessControl, Initializable {
+    using TransactionLib for Transaction;
     using ECDSA for bytes32;
 
     /*//////////////////////////////////////////////////////////////
@@ -28,12 +22,12 @@ contract Wallet is AccessControl, Initializable {
     //////////////////////////////////////////////////////////////*/
 
     error InvalidSignature(); // Signature does not match an owner
-
-    error TxnRepeated(bytes32 txn_hash); // Transaction was already executed
     
     error TxnReverted(bytes32 txn_hash); // Transaction had an error
 
     error Unauthorised(); // msg.sender is not an owner
+
+    error InvalidNonce(uint256 nonce); // nonce has already been used
 
     /*//////////////////////////////////////////////////////////////
                                  ROLES
@@ -49,8 +43,9 @@ contract Wallet is AccessControl, Initializable {
 
     bytes32 internal immutable INITIAL_DOMAIN_SEPARATOR;
 
+    //TODO: must the mapping be public?
     // Execution mappings to prevent replay
-    mapping(bytes32 => bool) public executed;
+    mapping(uint256 => bool) public nonces;
 
     /*//////////////////////////////////////////////////////////////
                                  INITIALIZERS
@@ -86,11 +81,11 @@ contract Wallet is AccessControl, Initializable {
     /*//////////////////////////////////////////////////////////////
                                  EIP-4337 LOGIC
     //////////////////////////////////////////////////////////////*/
-    // TODO:
+    // TODO: what do we do with requiredPrefund?
     // We plan to just be compatible so we add the function signature as described in the spec
-    // function validateUserOp(UserOperation calldata userOp, uint requiredPrefund) external {
-    //     return;
-    // }
+    function validateUserOp(UserOperation calldata, uint) external pure {
+        return;
+    }
 
     /*//////////////////////////////////////////////////////////////
                                 WALLET LOGIC
@@ -106,8 +101,9 @@ contract Wallet is AccessControl, Initializable {
     }
 
     // Single transaction execute
-    function execute(Transaction calldata transaction, uint256 nonce, bytes memory signature) external {
-        bytes32 txnHash = _getTxnHash(transaction, nonce);
+    function execute(Transaction calldata transaction, bytes memory signature) external {
+        uint256 nonce = transaction.nonce;
+        bytes32 txnHash = _getTxnHash(transaction);
 
         // check signature
         if(!_verify(txnHash, signature)) {
@@ -115,16 +111,14 @@ contract Wallet is AccessControl, Initializable {
         }
 
         // check if txn was already executed
-        if(executed[txnHash]) {
-            revert TxnRepeated(txnHash);
+        if(nonces[nonce]) {
+            revert InvalidNonce(nonce);
         }
-
+        
+        nonces[transaction.nonce] = true;
+        
         bool success;
         bytes memory result;
-
-        executed[txnHash] = true;
-
-        //FIXME:
         (success, result) = transaction.target.call{value: transaction.value, 
                             gas: transaction.gasLimit == 0 ? gasleft() : 
                             transaction.gasLimit}(transaction.data);
@@ -137,11 +131,19 @@ contract Wallet is AccessControl, Initializable {
     }
 
     // Multi-execute
-    function execute(Transaction[] calldata txns, uint256 nonce, bytes memory signature) external {
+    function execute(Transaction[] calldata txns, bytes memory signature) external {
         bytes memory multiTxnData;
+        uint256 nonce;
         for(uint256 i = 0; i < txns.length; ++i) {
-            bytes32 txnHash = _getTxnHash(txns[i], nonce);
+            nonce = txns[i].nonce;
+            bytes32 txnHash = _getTxnHash(txns[i]);
             multiTxnData = abi.encode(multiTxnData, txnHash);
+
+            // check nonce
+            if(nonces[nonce]) {
+                revert InvalidNonce(nonce);
+            }
+            nonces[nonce] = true;
         }
         bytes32 multiTxnHash = keccak256(multiTxnData);
 
@@ -149,19 +151,12 @@ contract Wallet is AccessControl, Initializable {
         if(!_verify(multiTxnHash, signature)) {
             revert InvalidSignature();
         }
-
-        // make sure that this transaction was not already executed
-        if(executed[multiTxnHash]) {
-            revert TxnRepeated(multiTxnHash);
-        }
-        executed[multiTxnHash] = true;
         
         for(uint256 i = 0; i < txns.length; ++i) {
             Transaction memory transaction = txns[i];
 
             bool success;
             bytes memory result;
-            //FIXME:
             (success, result) = transaction.target.call{value: transaction.value, 
                                 gas: transaction.gasLimit == 0 ? gasleft() : 
                                 transaction.gasLimit}(transaction.data);
@@ -177,10 +172,8 @@ contract Wallet is AccessControl, Initializable {
     //////////////////////////////////////////////////////////////*/
 
     // EIP-712 typed data hash
-    //FIXME:
-    function _getTxnHash(Transaction calldata transaction, uint256 nonce) internal view returns(bytes32) {
-        bytes32 txn_hash = keccak256(abi.encode(nonce, transaction.gasLimit, transaction.target, transaction.revertOnError, transaction.value, transaction.data));
-        return keccak256(abi.encodePacked("\x19\x01", DOMAIN_SEPARATOR(), txn_hash));
+    function _getTxnHash(Transaction calldata transaction) internal view returns(bytes32) {
+        return keccak256(abi.encodePacked("\x19\x01", DOMAIN_SEPARATOR(), transaction.getHash()));
     }
 
     // Domain separator

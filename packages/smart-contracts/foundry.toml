@@ -7,6 +7,8 @@ gas_reports = ["Wallet"]
 [rpc_endpoints]
 goerli = "${GOERLI_RPC_URL}"
 fantom-tst = "https://xapi.testnet.fantom.network/lachesis"
+mumbai= "https://polygon-mumbai.g.alchemy.com/v2/NcRfezr9Hr0uVcYDQM1Q_i1FbGJMz3g3"
 [etherscan]
 fantom-tst = { key = "${FANTOM_API_KEY}" }
+mumbai = { key = "$MUMBAI_API_KEY" }
 # See more config options https://github.com/foundry-rs/foundry/tree/master/config
