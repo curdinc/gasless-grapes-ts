@@ -3,8 +3,6 @@ pragma solidity ^0.8.7;
 import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
-import "@account-abstraction/samples/SimpleAccount.sol";
-import "ExcessivelySafeCall/ExcessivelySafeCall.sol";
 import "./utils/Transaction.sol";
 
 contract Wallet is AccessControl, Initializable {
