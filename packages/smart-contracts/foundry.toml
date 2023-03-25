@@ -1,14 +1,45 @@
 [profile.default]
-src = 'src'
-out = 'out'
-libs = ['lib']
+src = "src"
+out = "out"
+libs = ["lib"]
 fs_permissions = [{ access = "read", path = "./"}]
 gas_reports = ["Wallet"]
 [rpc_endpoints]
+# # Mainnets # # 
+gnosis = "https://rpc.gnosischain.com"
+optimism = "https://mainnet.optimism.io"
+polygon = "https://polygon-rpc.com/"
+zk-era = "https://zksync2-mainnet.zksync.io"
+taiko = "https://rpc.a2.taiko.xyz"
+
+# # Testnets # #
 goerli = "${GOERLI_RPC_URL}"
 fantom-tst = "https://xapi.testnet.fantom.network/lachesis"
 mumbai= "https://polygon-mumbai.g.alchemy.com/v2/NcRfezr9Hr0uVcYDQM1Q_i1FbGJMz3g3"
+scroll-alpha = "https://alpha-rpc.scroll.io/l2"
+optimism-goerli = "https://goerli.optimism.io"
+zk-era-testnet = "https://testnet.era.zksync.dev"
+sepolia = "https://rpc.sepolia.org"
+taiko-testnet = "https://rpc.a2.taiko.xyz"
+mantle = "https://rpc.testnet.mantle.xyz"
+chiado = "https://rpc.chiadochain.net"
+
+
 [etherscan]
+# # Mainnets # # 
+gnosis = {key = "${GNOSIS_API_KEY}", url = "https://gnosisscan.io"}
+optimism = {key = "${OPTIMISM_API_KEY}", url = "https://optimistic.etherscan.io/"}
+polygon = {key = "${POLYGON_API_KEY}", url = "https://polygonscan.com/"}
+zk-era = {key = "", url = "https://explorer.zksync.io/"}
+taiko = {key = "", url = "https://explorer.a2.taiko.xyz"}
+
+# # Testnets # # blank keys are chains without apis
 fantom-tst = { key = "${FANTOM_API_KEY}" }
+goerli = { key = "${ETHERSCAN_API_KEY}" }
 mumbai = { key = "$MUMBAI_API_KEY" }
-# See more config options https://github.com/foundry-rs/foundry/tree/master/config
+scroll-alpha = {key = "", url = "https://blockscout.scroll.io/"}
+optimism-goerli = {key = "${OPTIMISM_API_KEY}", url = "https://goerli-optimism.etherscan.io/"}
+zk-era-testnet = {key = "", url = "https://zksync2-testnet.zkscan.io/"}
+taiko-testnet = {key = "", url = "https://explorer.a2.taiko.xyz/"}
+mantle = {key = "", url = "https://explorer.testnet.mantle.xyz/"}
+chiado = {key = "", url = "https://blockscout.chiadochain.net"}

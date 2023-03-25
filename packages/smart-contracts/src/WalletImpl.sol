@@ -5,7 +5,13 @@ import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "./utils/Transaction.sol";
 
-contract Wallet is AccessControl, Initializable {
+// minimal 4337 account interface
+interface IAccount {
+    function validateUserOp(UserOperation calldata userOp, bytes32 userOpHash, uint256 missingAccountFunds)
+    external returns (uint256 validationData);
+}
+
+contract Wallet is AccessControl, Initializable, IAccount {
     using TransactionLib for Transaction;
     using ECDSA for bytes32;
 
@@ -81,8 +87,8 @@ contract Wallet is AccessControl, Initializable {
     //////////////////////////////////////////////////////////////*/
     // TODO: what do we do with requiredPrefund?
     // We plan to just be compatible so we add the function signature as described in the spec
-    function validateUserOp(UserOperation calldata, uint) external pure {
-        return;
+    function validateUserOp(UserOperation calldata userOp, bytes32 userOpHash, uint256 missingAccountFunds)
+    external pure returns (uint256 validationData) {
     }
 
     /*//////////////////////////////////////////////////////////////

@@ -12,3 +12,6 @@ out/
 .env
 .env*.local
 .secret
+
+# dev docs
+notes.txt

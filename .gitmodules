@@ -8,3 +8,5 @@
 	url = https://github.com/OpenZeppelin/openzeppelin-contracts
 [submodule "lib/openzeppelin-contracts"]
 	branch = v4.8.2
+[submodule "lib/account-abstraction"]
+	branch = v0.4.0
