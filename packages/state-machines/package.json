@@ -10,13 +10,17 @@
     "lint:fix": "pnpm lint --fix",
     "type-check": "tsc --noEmit"
   },
-  "dependencies": {
-    "ethers": "^6.1.0",
-    "xstate": "^4.37.0"
-  },
   "devDependencies": {
     "eslint": "^8.34.0",
     "eslint-config-gaslessgrapes": "0.0.0",
-    "typescript": "^4.9.5"
+    "ethers": "^6.2.2",
+    "typescript": "^4.9.5",
+    "xstate": "^4.37.0",
+    "zod": "^3.20.6"
+  },
+  "peerDependencies": {
+    "ethers": "^6.2.2",
+    "xstate": "^4.37.0",
+    "zod": "^3.20.6"
   }
 }

@@ -1,7 +1,10 @@
+import { useContext } from "react";
 import { Button, Heading, Stack } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import { OnboardingStateContext } from "~app/stateMachines/onboardingStateContext";
 
 export function OnboardingWelcome() {
+  const { onboardingService } = useContext(OnboardingStateContext);
+
   return (
     <Stack spacing={10}>
       <Heading fontSize={"3xl"} textAlign="center">
@@ -9,14 +12,20 @@ export function OnboardingWelcome() {
       </Heading>
 
       <Stack w="full" spacing={5}>
-        <Button as={Link} to="/onboarding/new-user" w="full">
+        <Button
+          onClick={() => {
+            onboardingService.send("BEGIN_CREATE_USER");
+          }}
+          w="full"
+        >
           Get Started
         </Button>
         <Button
           w="full"
           variant="ghost"
-          as={Link}
-          to="/onboarding/existing-user"
+          onClick={() => {
+            onboardingService.send("BEGIN_IMPORT_USER");
+          }}
         >
           Import an existing wallet (Seed Phrase)
         </Button>
