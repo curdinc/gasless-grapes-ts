@@ -42,3 +42,4 @@ export const ActiveChainSchema = z.object({
   chainId: chainIdSchema,
 });
 export type ActiveChainType = z.infer<typeof ActiveChainSchema>;
+

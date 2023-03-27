@@ -52,7 +52,6 @@ export const bridgeClient = createTRPCProxyClient<WindowEthereumAppRouter>({
 });
 
 // inject
-console.log("ran");
 const windowProvider = new WindowEthereum(bridgeClient);
 
 Object.defineProperty(window, "ethereum", {

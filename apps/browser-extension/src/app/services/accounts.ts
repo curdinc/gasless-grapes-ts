@@ -10,7 +10,7 @@ import {
   RetrievedPrivatekeyStorageType,
 } from "~schema/Accounts";
 
-import type { WallerUserState } from "@gg/state-machines";
+import type { UserWalletState } from "@gg/state-machines";
 
 export class AccountsManager {
   eoaPrivateKeyPrefix = "gg_eoa_pkey_" as const;
@@ -32,15 +32,16 @@ export class AccountsManager {
       area: "sync",
     });
   }
+  async getPassword() {
+    return this.sessionStorage.get(this.passwordKey);
+  }
+
   async init(password) {
     await this.sessionStorage.set(this.passwordKey, password);
-    await this.secureStorage.setPassword(password);
   }
 
   async isInit() {
-    return (
-      typeof (await this.sessionStorage.get(this.passwordKey)) === "string"
-    );
+    return typeof (await this.getPassword()) === "string";
   }
 
   async uninit() {
@@ -53,6 +54,8 @@ export class AccountsManager {
     if (!(await this.isInit())) {
       throw new Error("UNINITIALIZED: make a call to init first");
     }
+    const password = await this.getPassword();
+    await this.secureStorage.setPassword(password);
     const sensitiveItems =
       await this.secureStorage.get<RetrievedPrivatekeyStorageType>(accountName);
     if (sensitiveItems?.privateKey.startsWith(this.eoaPrivateKeyPrefix)) {
@@ -67,13 +70,15 @@ export class AccountsManager {
     if (!(await this.isInit())) {
       throw new Error("UNINITIALIZED: make a call to init first");
     }
+    const password = await this.getPassword();
+    await this.secureStorage.setPassword(password);
     await this.secureStorage.set(accountName, {
       privateKey: `${this.eoaPrivateKeyPrefix}${sensitiveItems.privateKey}`,
       seedPhrase: sensitiveItems.seedPhrase,
     } as PrivateKeyStorageType);
   }
 
-  async getUserAccountState(): Promise<WallerUserState> {
+  async getUserAccountState(): Promise<UserWalletState> {
     const accounts = AccountsSchema.parse(
       await this.syncStorage.get<AccountsType>(this.accountsKey),
     );

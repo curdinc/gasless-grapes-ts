@@ -1,5 +1,6 @@
 import { createContext } from "react";
 import { useInterpret } from "@xstate/react";
+import { useNavigate } from "react-router-dom";
 import type { InterpreterFrom } from "xstate";
 import { AccountsManager } from "~app/services/accounts";
 
@@ -11,12 +12,13 @@ export const GlobalStateContext = createContext({
 });
 
 export function GlobalStateProvider(props: { children: React.ReactNode }) {
+  const navigate = useNavigate();
   const accountsManager = new AccountsManager();
   const userState = useInterpret(WalletGlobalMachine, {
     services: {
       checkUserState: async () => {
-        await new Promise((res, rej) => {
-          setTimeout(res, 1000);
+        await new Promise((res) => {
+          setTimeout(res, 500);
         });
         return { state: await accountsManager.getUserAccountState() };
       },
@@ -24,6 +26,15 @@ export function GlobalStateProvider(props: { children: React.ReactNode }) {
     actions: {
       clearAccountPassword() {
         accountsManager.lockAccount();
+      },
+      navigateToOnboarding() {
+        navigate("/onboarding");
+      },
+      navigateToPasswordPage() {
+        navigate("/login");
+      },
+      navigateToHomePage() {
+        navigate("/");
       },
     },
   });

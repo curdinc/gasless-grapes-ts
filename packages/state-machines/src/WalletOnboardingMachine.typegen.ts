@@ -39,8 +39,8 @@ export interface Typegen0 {
   };
   missingImplementations: {
     actions:
+      | "completeOnboarding"
       | "navigateToExistingUserScreen"
-      | "navigateToLoggedInUserScreen"
       | "navigateToNewUserScreen"
       | "navigateToWelcomeScreen";
     delays: never;
@@ -56,9 +56,9 @@ export interface Typegen0 {
       | "error.platform.WalletOnboarding.creatingEoa:invocation[0]"
       | "error.platform.WalletOnboarding.savingEoa:invocation[0]";
     clearSeedPhrase: "BEGIN_CREATE_USER";
+    completeOnboarding: "done.invoke.WalletOnboarding.savingEoa:invocation[0]";
     ensureSeedPhraseIsRequired: "BEGIN_IMPORT_USER";
     navigateToExistingUserScreen: "BEGIN_IMPORT_USER";
-    navigateToLoggedInUserScreen: "done.invoke.WalletOnboarding.savingEoa:invocation[0]";
     navigateToNewUserScreen: "BEGIN_CREATE_USER";
     navigateToWelcomeScreen: "BACK_TO_WELCOME_SCREEN";
     updateContext: "ENTER_ONBOARDING_DETAILS";

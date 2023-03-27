@@ -14,13 +14,25 @@ export interface Typegen0 {
     checkUserState: "done.invoke.Global.loadingUser:invocation[0]";
   };
   missingImplementations: {
-    actions: "clearAccountPassword";
+    actions:
+      | "clearAccountPassword"
+      | "navigateToHomePage"
+      | "navigateToOnboarding"
+      | "navigateToPasswordPage";
     delays: never;
     guards: never;
     services: "checkUserState";
   };
   eventsCausingActions: {
     clearAccountPassword: "LOCK_ACCOUNT";
+    navigateToHomePage:
+      | "DONE_ONBOARDING"
+      | "UNLOCK_ACCOUNT"
+      | "done.invoke.Global.loadingUser:invocation[0]";
+    navigateToOnboarding: "done.invoke.Global.loadingUser:invocation[0]";
+    navigateToPasswordPage:
+      | "LOCK_ACCOUNT"
+      | "done.invoke.Global.loadingUser:invocation[0]";
   };
   eventsCausingDelays: {};
   eventsCausingGuards: {
@@ -28,7 +40,11 @@ export interface Typegen0 {
     isNewUser: "done.invoke.Global.loadingUser:invocation[0]";
   };
   eventsCausingServices: {
-    checkUserState: "DONE_ONBOARDING" | "LOCK_ACCOUNT" | "xstate.init";
+    checkUserState:
+      | "DONE_ONBOARDING"
+      | "LOCK_ACCOUNT"
+      | "UNLOCK_ACCOUNT"
+      | "xstate.init";
   };
   matchesStates:
     | "loadingUser"

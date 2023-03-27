@@ -42,7 +42,6 @@ const appRouter = t.router({
     .query(async ({ input }) => {
       console.log("input", input);
       // const test = await bgWorkerClient.request.subscribe({ name: "test" });
-      // console.log("test", test);
       // return test;
       return "done";
     }),

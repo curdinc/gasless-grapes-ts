@@ -24,7 +24,6 @@ const createWalletSchema = z
   )
   .refine(
     (args) => {
-      console.log("args", args);
       if (typeof args.seedPhrase === "string") {
         try {
           ethers.Wallet.fromPhrase(args.seedPhrase);
@@ -175,7 +174,7 @@ export const WalletOnboardingMachine = createMachine(
         ],
       },
       initializedEoa: {
-        entry: ["navigateToLoggedInUserScreen"],
+        entry: ["completeOnboarding"],
         type: "final",
       },
     },

@@ -1,16 +1,18 @@
 import { ChakraProvider } from "@chakra-ui/react";
-import { RouterProvider } from "react-router-dom";
-import { router } from "~app/routes";
+import { BrowserRouter } from "react-router-dom";
+import { ReactRouter } from "~app/routes";
 import { GlobalStateProvider } from "~app/stateMachines/globalStateContext";
 import { theme } from "~app/theme";
 
 function IndexPopup() {
   return (
-    <GlobalStateProvider>
-      <ChakraProvider theme={theme}>
-        <RouterProvider router={router} />
-      </ChakraProvider>
-    </GlobalStateProvider>
+    <ChakraProvider theme={theme}>
+      <BrowserRouter basename="popup.html">
+        <GlobalStateProvider>
+          <ReactRouter />
+        </GlobalStateProvider>
+      </BrowserRouter>
+    </ChakraProvider>
   );
 }
 

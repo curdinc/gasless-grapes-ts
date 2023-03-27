@@ -1,5 +1,5 @@
-import { createContext, useContext } from "react";
 import { useInterpret } from "@xstate/react";
+import { createContext, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import type { InterpreterFrom } from "xstate";
 
@@ -13,7 +13,7 @@ export const OnboardingStateContext = createContext({
 
 export function OnboardingStateProvider(props: { children: React.ReactNode }) {
   const navigate = useNavigate();
-  const { accountsManager } = useContext(GlobalStateContext);
+  const { accountsManager, userState } = useContext(GlobalStateContext);
   const onboardingService = useInterpret(WalletOnboardingMachine, {
     services: {
       saveUserEoa: async (ctx, event) => {
@@ -39,9 +39,8 @@ export function OnboardingStateProvider(props: { children: React.ReactNode }) {
       navigateToWelcomeScreen() {
         navigate("/onboarding");
       },
-      navigateToLoggedInUserScreen() {
-        // TODO: Fix this. This doesn't work
-        navigate("/");
+      completeOnboarding() {
+        userState.send("DONE_ONBOARDING");
       },
     },
   });

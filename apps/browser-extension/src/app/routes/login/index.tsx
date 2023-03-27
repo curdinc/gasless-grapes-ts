@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useRef } from "react";
 import {
   Button,
   FormControl,
@@ -7,30 +7,31 @@ import {
   Input,
   Stack,
 } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
+import { useSelector } from "@xstate/react";
 import { BaseExtensionLayout } from "~app/components/BaseExtensionLayout";
 import { IconAndName } from "~app/components/IconAndName";
-import { GlobalStateContext } from "~app/stateMachines/globalStateContext";
+import {
+  LoginStateContext,
+  LoginStateProvider,
+} from "~app/stateMachines/loginUserStateMachine";
 
-export function LoginPage() {
-  const { accountsManager } = useContext(GlobalStateContext);
-  const navigate = useNavigate();
-  const [password, setPassword] = useState("");
-  const [isError, setIsError] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-
+function InnerLoginPage() {
+  const { loginService } = useContext(LoginStateContext);
+  const { isError, isLoading } = useSelector(loginService, (state) => {
+    return {
+      isLoading: state.matches("loggingIn"),
+      isError: !!state.context.error,
+    };
+  });
   const onSubmit = (e) => {
     e.preventDefault();
-    setIsLoading(true);
-    accountsManager.unlockAccount(password).then((userStatus) => {
-      if (userStatus !== "loggedInUser") {
-        setIsError(true);
-        setIsLoading(false);
-      } else {
-        navigate("/");
-      }
-    });
+    loginService.send("LOGIN");
   };
+  const inputRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
   return (
     <BaseExtensionLayout p={10} as={Stack} justifyContent="center">
       <IconAndName mb={10} />
@@ -39,12 +40,14 @@ export function LoginPage() {
           <FormControl isRequired isInvalid={isError}>
             <FormLabel>Password</FormLabel>
             <Input
+              ref={inputRef}
               type="password"
               placeholder="password"
-              value={password}
               onChange={(e) => {
-                setPassword(e.target.value);
-                setIsError(false);
+                loginService.send({
+                  type: "ENTER_PASSWORD",
+                  data: { password: e.target.value },
+                });
               }}
             />
             <FormErrorMessage>Invalid Password</FormErrorMessage>
@@ -60,5 +63,12 @@ export function LoginPage() {
         </Stack>
       </form>
     </BaseExtensionLayout>
+  );
+}
+export function LoginPage() {
+  return (
+    <LoginStateProvider>
+      <InnerLoginPage />
+    </LoginStateProvider>
   );
 }
