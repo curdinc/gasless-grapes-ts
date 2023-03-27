@@ -1,0 +1,26 @@
+{
+  "name": "@gg/state-machines",
+  "version": "0.1.0",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "license": "MIT",
+  "scripts": {
+    "clean": "rm -rf .turbo node_modules",
+    "lint": "eslint .",
+    "lint:fix": "pnpm lint --fix",
+    "type-check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "eslint": "^8.34.0",
+    "eslint-config-gaslessgrapes": "0.0.0",
+    "ethers": "^6.2.2",
+    "typescript": "^4.9.5",
+    "xstate": "^4.37.0",
+    "zod": "^3.20.6"
+  },
+  "peerDependencies": {
+    "ethers": "^6.2.2",
+    "xstate": "^4.37.0",
+    "zod": "^3.20.6"
+  }
+}
