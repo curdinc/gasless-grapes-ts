@@ -1,4 +1,5 @@
 import { initTRPC } from "@trpc/server";
+import GrapeIcon from "data-base64:~assets/icon.png";
 import { createChromeHandler } from "trpc-chrome/adapter";
 import {
   EvmRequestInputSchema,
@@ -14,8 +15,11 @@ const t = initTRPC.create({
 });
 const publicProcedure = t.procedure;
 
+console.log("running bg script");
+
 const appRouter = t.router({
   request: publicProcedure.input(EvmRequestInputSchema).query(({ input }) => {
+    console.log("input", input);
     return new Promise<EvmRequestOutputType>((res, rej) => {
       const onEvmRequestComplete = (
         evmRequestResponse: EvmRequestOutputType,
@@ -31,12 +35,33 @@ const appRouter = t.router({
 
       evmRpcEvents.on("evmRequestComplete", onEvmRequestComplete);
       evmRpcEvents.on("evmRequestComplete", altFn);
-      evmRpcEvents.emit("evmRequestComplete", {
-        method: "eth_chainId",
-        result: "",
-      });
+
       switch (input.method) {
         case "eth_getEncryptionPublicKey ": {
+          break;
+        }
+        case "eth_accounts":
+        case "eth_requestAccounts": {
+          console.log("input.params", input.params);
+          chrome.notifications.create(
+            {
+              iconUrl: GrapeIcon,
+              message: "Allow this site to access your Ethereum account?",
+              title: "Connect Wallet to Site",
+              type: "basic",
+              buttons: [
+                {
+                  title: "Approve",
+                },
+                {
+                  title: "Reject",
+                },
+              ],
+            },
+            (notificationId) => {
+              console.log("notificationId", notificationId);
+            },
+          );
           break;
         }
         default: {

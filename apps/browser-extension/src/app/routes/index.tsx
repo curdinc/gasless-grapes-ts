@@ -2,7 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import { RouteGuard } from "~app/components/hoc/RouteGuard";
 
 import { AssetsOverview } from "./home/AssetsOverview";
-import { ExtensionLayout } from "./home/ExtensionLayout";
+import { ExtensionLayout } from "./home/layout/ExtensionLayout";
 import { LoginPage } from "./login";
 import { OnboardingExistingUser } from "./onboarding/ExistingUser";
 import { OnboardingNewUser } from "./onboarding/NewUser";

@@ -14,10 +14,8 @@ export const config: PlasmoCSConfig = {
   all_frames: true,
 };
 
-// create client to talk to service worker
-const port = chrome.runtime.connect(process.env.PLASMO_PUBLIC_EXTENSION_ID, {
-  name: "bg-worker-messaging-port",
-});
+// create interface to talk to service worker
+const port = chrome.runtime.connect();
 export const bgWorkerClient = createTRPCProxyClient<AppRouter>({
   links: [
     loggerLink({
@@ -41,8 +39,8 @@ const appRouter = t.router({
     .input(EvmRequestInputSchema)
     .query(async ({ input }) => {
       console.log("input", input);
-      // const test = await bgWorkerClient.request.subscribe({ name: "test" });
-      // return test;
+      const result = await bgWorkerClient.request.query(input);
+      console.log("result", result);
       return "done";
     }),
 });
@@ -69,7 +67,7 @@ createPostMessageHandler({
   },
   postMessage({ message, opts }) {
     const { event } = opts;
-    event.source.postMessage(message, {
+    event.source?.postMessage(message, {
       targetOrigin: event.origin,
     });
   },

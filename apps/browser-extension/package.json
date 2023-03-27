@@ -51,7 +51,10 @@
     "host_permissions": [
       "https://*/*"
     ],
-    "permission": ["unlimitedStorage"],
+    "permissions": [
+      "unlimitedStorage",
+      "notifications"
+    ],
     "commands": {
       "accept": {
         "suggested_key": {
