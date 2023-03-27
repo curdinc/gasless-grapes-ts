@@ -1,16 +1,9 @@
 import { useContext } from "react";
-import {
-  AspectRatio,
-  Button,
-  Flex,
-  Heading,
-  Image,
-  Stack,
-} from "@chakra-ui/react";
-import GrapeIcon from "data-base64:~assets/icon.png";
+import { Button, Stack } from "@chakra-ui/react";
 import { IoArrowBackSharp } from "react-icons/io5";
 import { Outlet, useLocation } from "react-router-dom";
 import { BaseExtensionLayout } from "~app/components/BaseExtensionLayout";
+import { IconAndName } from "~app/components/IconAndName";
 import {
   OnboardingStateContext,
   OnboardingStateProvider,
@@ -21,13 +14,8 @@ function OnboardingInnerLayout() {
   const { onboardingService } = useContext(OnboardingStateContext);
 
   return (
-    <BaseExtensionLayout as={Stack} rounded="xl" p={10}>
-      <Flex gap={4} mb={12}>
-        <AspectRatio ratio={1} w={14}>
-          <Image src={GrapeIcon} alt="Gasless Grape" />
-        </AspectRatio>
-        <Heading fontSize={"3xl"}>Gasless Grapes</Heading>
-      </Flex>
+    <BaseExtensionLayout as={Stack} rounded="xl" p={8}>
+      <IconAndName mb={12} />
 
       <Outlet />
 

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const EthAddressSchema = z.string().regex(/^0x[0-9,a-f,A-F]{40}$/);
+export const EthAddressSchema = z.string().regex(/^0x[0-9,a-f,A-F]{40}$/);
 const EthHashSchema = z.string().regex(/^0x[0-9a-f]{64}$/);
 const BytesSchema = z.string().regex(/^0x[0-9a-f]*$/);
 const BloomFilterSchema = z.string().regex(/^0x[0-9a-f]{512}$/);
@@ -92,6 +92,11 @@ const BlockInformationSchema = z.object({
   totalDifficulty: HexNumberSchema,
   uncles: z.any().array(),
   transactions: z.union([BlockTransactionSchema, EthHashSchema]).array(),
+});
+
+export const EvmRequestNaiveInputSchema = z.object({
+  method: z.string(),
+  params: z.any(),
 });
 
 export const EvmKnownRequestInputSchema = z.discriminatedUnion("method", [
@@ -230,14 +235,8 @@ export const EvmKnownRequestInputSchema = z.discriminatedUnion("method", [
   //     }),
   // }),
 ]);
-export const EvmRequestInputSchema = z.union([
-  EvmKnownRequestInputSchema,
-  z.object({
-    method: z.string(),
-    params: z.unknown().array().optional(),
-  }),
-]);
-export type EvmRequestType = z.infer<typeof EvmRequestInputSchema>;
+export const EvmRequestInputSchema = EvmRequestNaiveInputSchema;
+export type EvmRequestInputType = z.infer<typeof EvmRequestInputSchema>;
 
 const Web3WalletPermissionSchema = z.object({
   parentCapability: z.string(),
@@ -346,12 +345,9 @@ export const KnownEvmRequestOutputSchema = z.discriminatedUnion("method", [
   //   result: HexNumberSchema,
   // }),
 ]);
-export const EvmRequestOutputSchema = z.union([
-  KnownEvmRequestOutputSchema,
-  z.object({
-    method: z.string(),
-    result: z.unknown().array().optional(),
-  }),
-]);
+export const EvmRequestOutputSchema = z.object({
+  method: z.string(),
+  result: z.unknown().array().optional(),
+});
 
 export type EvmRequestOutputType = z.infer<typeof EvmRequestOutputSchema>;

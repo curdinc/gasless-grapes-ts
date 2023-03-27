@@ -3,6 +3,7 @@ import { RouteGuard } from "~app/components/hoc/RouteGuard";
 
 import { AssetsOverview } from "./home/AssetsOverview";
 import { ExtensionLayout } from "./home/ExtensionLayout";
+import { LoginPage } from "./login";
 import { OnboardingExistingUser } from "./onboarding/ExistingUser";
 import { OnboardingNewUser } from "./onboarding/NewUser";
 import { OnboardingLayout } from "./onboarding/OnboardingLayout";
@@ -45,6 +46,10 @@ export const router = createBrowserRouter(
           element: <OnboardingExistingUser />,
         },
       ],
+    },
+    {
+      path: "/login",
+      element: <LoginPage />,
     },
   ],
   {

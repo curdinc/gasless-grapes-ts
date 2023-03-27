@@ -44,6 +44,7 @@ importers:
       '@types/node': 18.11.18
       '@types/react': 18.0.27
       '@types/react-dom': 18.0.10
+      '@wagmi/chains': ^0.2.14
       '@xstate/react': ^3.2.1
       eslint-config-gaslessgrapes: '*'
       ethers: ^6.2.2
@@ -72,6 +73,7 @@ importers:
       '@plasmohq/storage': 1.3.1_react@18.2.0
       '@trpc/client': 10.14.0_@trpc+server@10.14.0
       '@trpc/server': 10.14.0
+      '@wagmi/chains': 0.2.14_typescript@4.9.4
       '@xstate/react': 3.2.1_7ldedhq65n2n63dxu54z7lcb2q
       ethers: 6.2.2
       framer-motion: 10.6.0_biqbaboplfbrettd7655fr4n2y
@@ -7096,6 +7098,17 @@ packages:
 
   /@vue/shared/3.2.47:
     resolution: {integrity: sha512-BHGyyGN3Q97EZx0taMQ+OLNuZcW3d37ZEVmEAyeoA9ERdGvm9Irc/0Fua8SNyOtV1w6BS4q25wbMzJujO9HIfQ==}
+    dev: false
+
+  /@wagmi/chains/0.2.14_typescript@4.9.4:
+    resolution: {integrity: sha512-esWhs1sf8/J/u+54F/sUQ97iZ/zUN2rYUrLYOD35ynIJn9ZwGXeV/tkiXx/6xXDmq0VK5oe1Pe7BU/pvaURzcA==}
+    peerDependencies:
+      typescript: '>=4.9.4'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      typescript: 4.9.4
     dev: false
 
   /@xmldom/xmldom/0.7.9:
@@ -15632,7 +15645,6 @@ packages:
     resolution: {integrity: sha512-Uz+dTXYzxXXbsFpM86Wh3dKCxrQqUcVMxwU54orwlJjOpO3ao8L7j5lH+dWfTwgCwIuM9GQ2kvVotzYJMXTBZg==}
     engines: {node: '>=4.2.0'}
     hasBin: true
-    dev: true
 
   /typescript/4.9.5:
     resolution: {integrity: sha512-1FXk9E2Hm+QzZQ7z+McJiHL4NW1F2EzMu9Nq9i3zAaGqibafqYwCVU6WyWAuyQRRzOlxou8xZSyXLEN8oKj24g==}

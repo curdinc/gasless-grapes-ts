@@ -1,4 +1,3 @@
-import console from "console";
 import { createContext, useContext } from "react";
 import { useInterpret } from "@xstate/react";
 import { useNavigate } from "react-router-dom";
@@ -24,7 +23,7 @@ export function OnboardingStateProvider(props: { children: React.ReactNode }) {
         const pwd = ctx.password;
         await accountsManager.createAccount({
           pwd,
-          seedPhrase: mnemonic.phrase,
+          seedPhrase: mnemonic?.phrase,
           name: ctx.name,
           privateKey: wallet.privateKey,
         });
