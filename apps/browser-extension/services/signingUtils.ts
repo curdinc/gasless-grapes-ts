@@ -1,14 +1,6 @@
 import { ethers } from "ethers";
 
-// Define an interface for Ethereum transactions
-export interface Transaction {
-  gasLimit: ethers.BigNumber; // The maximum amount of gas that can be used for the transaction
-  value: ethers.BigNumber; // The amount of Ether to be transferred with the transaction
-  nonce: ethers.BigNumber; // A unique identifier for the sender's account
-  target: string; // The address of the contract or account that will receive the transaction
-  revertOnError: boolean; // Whether the transaction should revert if an error occurs
-  data: string; // The data to be sent with the transaction
-}
+import type { Transaction } from "./types";
 
 // Define the EIP-712 signature and type hash
 const EIP_712_SIG = "EIP712Domain(string name,uint256 chainId)";
