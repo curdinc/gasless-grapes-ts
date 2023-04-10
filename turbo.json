@@ -41,6 +41,7 @@
     "NODE_ENV",
     "SKIP_ENV_VALIDATION",
     "VERCEL",
-    "VERCEL_URL"
+    "VERCEL_URL",
+    "PLASMO_PUBLIC_EXTENSION_ID"
   ]
 }

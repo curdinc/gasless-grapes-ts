@@ -7,5 +7,5 @@
   "eslint.rules.customizations": [{ "rule": "*", "severity": "warn" }],
   "typescript.tsdk": "node_modules/typescript/lib",
   "dotenv.enableAutocloaking": false,
-  "cSpell.words": ["gaslessgrapes"]
+  "cSpell.words": ["gaslessgrapes", "pkey"]
 }
