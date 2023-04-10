@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 
-import type { Transaction } from "./types";
+import type { Transaction } from "../src/schema/GaslessGrapesWalletOperations";
 
 // Define the EIP-712 signature and type hash
 const EIP_712_SIG = "EIP712Domain(string name,uint256 chainId)";

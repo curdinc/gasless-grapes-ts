@@ -8,7 +8,7 @@ import {
   getTransactionHash,
   getTxnHash,
 } from "../services/signingUtils";
-import type { Transaction } from "../services/types";
+import type { Transaction } from "../src/schema/GaslessGrapesWalletOperations";
 
 describe("signing tests", () => {
   test("test typehash", () => {

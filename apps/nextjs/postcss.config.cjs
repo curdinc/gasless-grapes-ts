@@ -1,2 +1,2 @@
-// @ts-ignore
+c; // @ts-ignore
 module.exports = require("@gg/tailwind-config/postcss");

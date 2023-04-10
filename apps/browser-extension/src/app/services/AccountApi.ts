@@ -5,9 +5,11 @@
 // requires: chain
 // estimate Gas: will be done by gg
 
+import type { Transaction } from "ethers";
+import { EthAddressSchema } from "~schema/EvmRequestSchema";
+import type { signFunction } from "~schema/GaslessGrapesWalletOperations";
+
 import { getTransactionHash } from "./signingUtils";
-import type { Transaction, signFunction } from "./types";
-import { Address } from "./zodSchema";
 
 export interface AccountAPIParams {
   getSignature: signFunction;
@@ -21,8 +23,7 @@ export class AccountAPI {
   eoa: string;
 
   constructor(params: AccountAPIParams) {
-    const parsed = Address.safeParse(params.eoa);
-    if (!parsed.success) throw new Error("Invalid EOA");
+    EthAddressSchema.parse(params.eoa);
     this.getSignature = params.getSignature;
     this.chainId = params.chainId;
     this.eoa = params.eoa;

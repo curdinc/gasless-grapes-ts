@@ -1,8 +1,11 @@
 import { describe, test } from "@jest/globals";
 import { type Bytes, ethers } from "ethers";
-import type { signFunction } from "services/types";
+import type { signFunction } from "~schema/GaslessGrapesWalletOperations";
 
-import { AccountAPI, type AccountAPIParams } from "../services/AccountApi";
+import {
+  AccountAPI,
+  type AccountAPIParams,
+} from "../src/app/services/AccountApi";
 
 describe("AccountApi Testing", () => {
   const wallet = ethers.Wallet.createRandom();
