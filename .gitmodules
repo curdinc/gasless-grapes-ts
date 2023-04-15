@@ -1,0 +1,12 @@
+[submodule "packages/smart-contracts/lib/forge-std"]
+	path = packages/smart-contracts/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
+[submodule "lib/forge-std"]
+	branch = v1.5.2
+[submodule "packages/smart-contracts/lib/openzeppelin-contracts"]
+	path = packages/smart-contracts/lib/openzeppelin-contracts
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts
+[submodule "lib/openzeppelin-contracts"]
+	branch = v4.8.2
+[submodule "lib/account-abstraction"]
+	branch = v0.4.0
