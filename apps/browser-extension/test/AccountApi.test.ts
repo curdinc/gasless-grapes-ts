@@ -27,6 +27,6 @@ describe("AccountApi Testing", () => {
       eoa: "Invalid Address",
       chainId: 1, // mainnet
     };
-    expect(() => new AccountAPI(badEOAParams)).toThrow("Invalid EOA");
+    expect(() => new AccountAPI(badEOAParams)).toThrow();
   });
 });

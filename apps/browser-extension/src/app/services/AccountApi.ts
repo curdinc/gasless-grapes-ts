@@ -5,11 +5,13 @@
 // requires: chain
 // estimate Gas: will be done by gg
 
-import type { Transaction } from "ethers";
-import { EthAddressSchema } from "~schema/EvmRequestSchema";
-import type { signFunction } from "~schema/GaslessGrapesWalletOperations";
+import type {
+  GaslessGrapesWalletOperation,
+  signFunction,
+} from "~schema/GaslessGrapesWalletOperations";
 
-import { getTransactionHash } from "./signingUtils";
+import { EthAddressSchema } from "../../schema/EvmRequestSchema";
+import { getEip712HashForGaslessGrapesWalletOperation } from "./signingUtils";
 
 export interface AccountAPIParams {
   getSignature: signFunction;
@@ -29,9 +31,15 @@ export class AccountAPI {
     this.eoa = params.eoa;
   }
 
-  async createSignedTransaction(transaction: Transaction): Promise<string> {
-    const txnHash = getTransactionHash(transaction, this.chainId);
-    const signedTxn = await this.getSignature(txnHash);
+  async createSignedTransaction(
+    walletOperation: GaslessGrapesWalletOperation,
+  ): Promise<string> {
+    const WalletOperationEIP712Hash =
+      getEip712HashForGaslessGrapesWalletOperation(
+        walletOperation,
+        this.chainId,
+      );
+    const signedTxn = await this.getSignature(WalletOperationEIP712Hash);
 
     return signedTxn;
   }
